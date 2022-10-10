@@ -1,4 +1,5 @@
 import jan_heatpump_module as ctc
+import jan_shelly_module as plug
 import traceback
 import time
 import datetime
@@ -19,14 +20,14 @@ header = 'time        ' + TAB + \
     'brineIn' + TAB + \
     'brineUt' + TAB + \
     'brineDt' + TAB + \
-    'bri/rpm'
+    'bri/rpm' + TAB + \
+    'Wire W'
 
 f = open( LOGFILE, "a", buffering=1)
 f.write(header + EOL)
 
 while True:
     try:
-        time.sleep(DELAY)
 
         now = datetime.datetime.now()
         date = now.strftime("%Y-%m-%d")
@@ -41,11 +42,13 @@ while True:
         warm_water = ctc.warm_water_percent()
         brine_in = ctc.brine_in()
         brine_out = ctc.brine_out()
-        brine_dT = "{:6.4f}".format(  float(brine_out) - float(brine_in) )
+        brine_dT = "{:6.1f}".format(  float(brine_out) - float(brine_in) )
+
+        wire_power = "{:6.0f}".format( plug.getpower())
 
         brineDTOverRPM = '0'
         if float(rpm) > 10:
-            brineDTOverRPM = "{:6.4f}".format(  -100 * ( float(brine_out) - float(brine_in) ) / float(rpm) )
+            brineDTOverRPM = "{:6.2f}".format( -100 * ( float(brine_out) - float(brine_in) ) / float(rpm) )
 
 
         data = time_now + TAB + \
@@ -59,7 +62,8 @@ while True:
             brine_in + TAB + \
             brine_out + TAB + \
             brine_dT + TAB + \
-            brineDTOverRPM + EOL
+            brineDTOverRPM + TAB + \
+            wire_power + EOL
         f.write( data)
 
     except Exception as e:
@@ -67,6 +71,8 @@ while True:
         print(e)
         traceback.print_exc()
 
+
+    time.sleep(DELAY)
 
 f.close()
 

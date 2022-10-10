@@ -16,3 +16,4 @@ def getpower():
     data = json.loads(requests.get(BASEURL + 'status').text)
     power = data['meters'][0]['power']
     print('power = ' + str(power))
+    return power
