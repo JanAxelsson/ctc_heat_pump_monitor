@@ -12,16 +12,19 @@ TAB = '\t'
 header = 'time        ' + TAB + \
     'date          ' + TAB + \
     'out_T' + TAB + \
+    '|' + TAB + \
     'VS/VV' + TAB + \
     'status' + TAB + \
     'rpm' + TAB +  \
     'rad_ret' + TAB + \
     'rad_out' + TAB + \
+    '|' + TAB + \
     'brineIn' + TAB + \
     'brineUt' + TAB + \
     'brineDt' + TAB + \
+    '|' + TAB + \
     'bri/rpm' + TAB + \
-    'Wire W'
+    'P_wire'
 
 f = open( LOGFILE, "a", buffering=1)
 f.write(header + EOL)
@@ -54,14 +57,17 @@ while True:
         data = time_now + TAB + \
             date + TAB + \
             outdoor_temp + TAB + \
+            '|' + TAB + \
             heater + TAB + \
             status + TAB + \
             rpm + TAB + \
             radiator_return + TAB + \
             rad_out + TAB + \
+            '|' + TAB + \
             brine_in + TAB + \
             brine_out + TAB + \
             brine_dT + TAB + \
+            '|' + TAB + \
             brineDTOverRPM + TAB + \
             wire_power + EOL
         f.write( data)
