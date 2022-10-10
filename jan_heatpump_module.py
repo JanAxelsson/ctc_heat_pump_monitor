@@ -13,6 +13,11 @@ def print(a): # NOTE : override print.  Comment out to print output for all func
 def query_ctc_menu(url, pos, description, output):
 
     headers = {'Content-Type': 'application/x-www-form-urlencoded', }
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', \
+               "cache-control": "max-age=0", \
+               "expires": "0", \
+               "pragma": "no-cache"}
+
     data = '-1,-1'
     response = requests.post(url, headers=headers, data=data, timeout = 10)
 
