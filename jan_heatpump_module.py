@@ -10,6 +10,40 @@ DRIFTINFO_VV_O_EL = BASEURL + '/click/glob;menu;1;0;110'  # submenu on CTC GIS 2
 def print(a): # NOTE : override print.  Comment out to print output for all functions
     return
 
+
+#
+# Navigate menues
+#
+def click_top_to_next_window():
+    url = BASEURL + '/click/glob;menu;1;2;82;87;83'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', }
+    data = '397,124'
+    response = requests.post(url, headers=headers, data=data)
+
+def click_next_to_warm_water_window():
+    url = BASEURL + '/click/glob;menu;1;0;112;113'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', }
+    data = '232,129'
+    response = requests.post(url, headers=headers, data=data)
+
+
+def click_second_to_heat_pump_window():
+    url = BASEURL + '/click/glob;menu;1;0;110'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', }
+    data = '438,245'
+    response = requests.post(url, headers=headers, data=data)
+
+
+def top():
+    url = BASEURL + '/main.html'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', }
+    data = '376,24'
+    response = requests.get(url)
+
+#
+# Get data
+#
+
 def query_ctc_menu(url, pos, description, output):
 
     headers = {'Content-Type': 'application/x-www-form-urlencoded', }

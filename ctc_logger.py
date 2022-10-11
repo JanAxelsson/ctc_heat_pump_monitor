@@ -5,7 +5,7 @@ import time
 import datetime
 
 LOGFILE = "/var/log/ctc_log.txt"  # On mac : sudo touch, and, sudo chmod a+w
-DELAY = 60
+DELAY = 30
 
 EOL = '\n'
 TAB = '\t'
@@ -31,7 +31,26 @@ f.write(header + EOL)
 
 while True:
     try:
+        #
+        # Cycle menus (idea, that all data is updated)
+        #
+        ctc.top()
+        time.sleep(2)
 
+        ctc.click_top_to_next_window()
+        time.sleep(2)
+        ctc.click_next_to_warm_water_window()
+        time.sleep(2)
+
+        ctc.click_second_to_heat_pump_window()
+        time.sleep(2)
+
+        ctc.top()
+        time.sleep(2)
+
+        #
+        # Read data
+        #
         now = datetime.datetime.now()
         date = now.strftime("%Y-%m-%d")
         time_now = now.strftime("%H:%M:%S")
@@ -53,6 +72,9 @@ while True:
         if float(rpm) > 10:
             brineDTOverRPM = "{:6.2f}".format( -100 * ( float(brine_out) - float(brine_in) ) / float(rpm) )
 
+        #
+        # Log data
+        #
 
         data = time_now + TAB + \
             date + TAB + \
