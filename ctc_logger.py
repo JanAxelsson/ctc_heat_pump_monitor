@@ -4,8 +4,8 @@ import traceback
 import time
 import datetime
 
-LOGFILE = "/var/log/ctc_log.txt"  # On mac : sudo touch, and, sudo chmod a+w
-DELAY = 30
+LOGFILE = "/var/log/ctc_log.txt"    # On mac : sudo touch, and, sudo chmod a+w
+DELAY = 60                          # Must be above approximately 20 seconds
 
 EOL = '\n'
 TAB = '\t'
@@ -79,7 +79,7 @@ while True:
         data = time_now + TAB + \
                date + TAB + \
                outdoor_temp + TAB + \
-            '|' + TAB + \
+               '|' + TAB + \
                heater + TAB + \
                status + TAB + \
                rpm + TAB + \
@@ -100,7 +100,7 @@ while True:
         traceback.print_exc()
 
 
-    time.sleep(DELAY)
+    time.sleep(DELAY - 10)    # Subtract 10 s for delay due to above menu cycling
 
 f.close()
 
