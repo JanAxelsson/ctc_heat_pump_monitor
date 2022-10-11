@@ -94,10 +94,10 @@ def heat_system():
 def compressor_rpm():
     return query_ctc_menu(DRIFTINFO_PUMP, 65, 'Compressor RPM', True)
 
-def radiator_return():
+def heatpump_return():
     return query_ctc_menu(DRIFTINFO_PUMP, 75, 'Radiator return', True)
 
-def radiator_out():
+def heatpump_out():
     return query_ctc_menu(DRIFTINFO_PUMP, 76, 'Radiator out', True)
 
 def outdoor_temp():

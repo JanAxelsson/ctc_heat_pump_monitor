@@ -16,8 +16,8 @@ header = 'time        ' + TAB + \
     'VS/VV' + TAB + \
     'status' + TAB + \
     'rpm' + TAB +  \
-    'rad_ret' + TAB + \
-    'rad_out' + TAB + \
+    'vp_ret' + TAB + \
+    'vp_out' + TAB + \
     '|' + TAB + \
     'brineIn' + TAB + \
     'brineUt' + TAB + \
@@ -58,8 +58,8 @@ while True:
         status = ctc.compressor_status()
         rpm = ctc.compressor_rpm()
         heater = ctc.heat_system()
-        radiator_return = ctc.radiator_return()
-        rad_out = ctc.radiator_out()
+        radiator_return = ctc.heatpump_return()
+        rad_out = ctc.heatpump_out()
         outdoor_temp = ctc.outdoor_temp()
         warm_water = ctc.warm_water_percent()
         brine_in = ctc.brine_in()
