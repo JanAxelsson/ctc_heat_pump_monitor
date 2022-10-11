@@ -58,8 +58,8 @@ while True:
         status = ctc.compressor_status()
         rpm = ctc.compressor_rpm()
         heater = ctc.heat_system()
-        radiator_return = ctc.heatpump_return()
-        rad_out = ctc.heatpump_out()
+        heatpump_return = ctc.heatpump_return()
+        heatpump_out = ctc.heatpump_out()
         outdoor_temp = ctc.outdoor_temp()
         warm_water = ctc.warm_water_percent()
         brine_in = ctc.brine_in()
@@ -77,21 +77,21 @@ while True:
         #
 
         data = time_now + TAB + \
-            date + TAB + \
-            outdoor_temp + TAB + \
+               date + TAB + \
+               outdoor_temp + TAB + \
             '|' + TAB + \
-            heater + TAB + \
-            status + TAB + \
-            rpm + TAB + \
-            radiator_return + TAB + \
-            rad_out + TAB + \
-            '|' + TAB + \
-            brine_in + TAB + \
-            brine_out + TAB + \
-            brine_dT + TAB + \
-            '|' + TAB + \
-            brineDTOverRPM + TAB + \
-            wire_power + EOL
+               heater + TAB + \
+               status + TAB + \
+               rpm + TAB + \
+               heatpump_return + TAB + \
+               heatpump_out + TAB + \
+               '|' + TAB + \
+               brine_in + TAB + \
+               brine_out + TAB + \
+               brine_dT + TAB + \
+               '|' + TAB + \
+               brineDTOverRPM + TAB + \
+               wire_power + EOL
         f.write( data)
 
     except Exception as e:
