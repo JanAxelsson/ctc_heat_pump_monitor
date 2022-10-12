@@ -3,9 +3,26 @@ import jan_shelly_module as plug
 import traceback
 import time
 import datetime
-
-LOGFILE = "/var/log/ctc_log.txt"    # On mac : sudo touch, and, sudo chmod a+w
+#
+# NOTES:
+#
+# AUTO OFF
+#   Web browser to BASEURL (from jan_shelly_module.py).
+#   Set Timer AUTOOFF to time to run heater after it has become lower than THRESHOLD level
+#   I have it set to 1800 seconds = 30 minutes.
+#
+# HEAT WIRE THRESHOLD
+THRESHOLD = 6                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
+#
+# LOG FREQUENCY
 DELAY = 60                          # Must be above approximately 20 seconds
+#
+# LOG FILE
+LOGFILE = "/var/log/ctc_log.txt"    # Prepare : sudo touch, and, sudo chmod a+w
+
+#
+# CODE
+#
 
 EOL = '\n'
 TAB = '\t'
@@ -68,9 +85,21 @@ while True:
 
         wire_power = "{:6.0f}".format( plug.getpower())
 
+        # Delta brine relative fractional rpm
+        MAXRPM = 100;
         brineDTOverRPM = '0'
         if float(rpm) > 10:
-            brineDTOverRPM = "{:6.2f}".format( -100 * ( float(brine_out) - float(brine_in) ) / float(rpm) )
+            brineDTOverRPMvalue =  -MAXRPM * ( float(brine_out) - float(brine_in) ) / float(rpm)
+            brineDTOverRPM = "{:6.2f}".format(brineDTOverRPMvalue)
+
+        #
+        # Heater
+        #
+        if brineDTOverRPMvalue > THRESHOLD:
+            plug.on()
+
+        if brineDTOverRPMvalue < THRESHOLD:
+            plug.off()
 
         #
         # Log data
@@ -93,6 +122,8 @@ while True:
                brineDTOverRPM + TAB + \
                wire_power + EOL
         f.write( data)
+
+
 
     except Exception as e:
         print('error')
