@@ -98,8 +98,8 @@ while True:
         if brineDTOverRPMvalue > THRESHOLD:
             plug.on()
 
-        if brineDTOverRPMvalue < THRESHOLD:
-            plug.off()
+        #if brineDTOverRPMvalue < THRESHOLD:
+        #    plug.off()
 
         #
         # Log data
