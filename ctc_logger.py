@@ -19,7 +19,7 @@ THRESHOLD = 6                       # Threshold on delta brine relative fraction
 BRINE_DT_THRESHOLD = -2             # Threshold on delta brine only.  Trigger if  deltaBrine < BRINE_DT_THRESHOLD (since both negative)
 #
 # LOG FREQUENCY
-DELAY = 60                          # Must be above approximately 20 seconds
+DELAY = 20                          # Must be above approximately 20 seconds
 #
 # LOG FILE
 LOGFILE = "/var/log/ctc_log.txt"    # Prepare : sudo touch, and, sudo chmod a+w
@@ -30,9 +30,11 @@ HISTORYLENGTH = 7                   # Used for filtering out fluctuations in bri
 #
 # CODE
 #
+MAXRPM = 100;
 
 brineDt_queue = deque([], maxlen = HISTORYLENGTH)
 rpm_queue = deque([], maxlen = HISTORYLENGTH)
+brineDTOverRPM_queue = deque([], maxlen = HISTORYLENGTH)
 
 EOL = '\n'
 TAB = '\t'
@@ -52,6 +54,7 @@ header = 'time        ' + TAB + \
     '|' + TAB + \
     'bri/rpm' + TAB + \
     'median' + TAB + \
+    'NEW' + TAB + \
     'P_wire'
 
 f = open( LOGFILE, "a", buffering=1)
@@ -100,9 +103,9 @@ while True:
         # Store some old values for filtering
         brineDt_queue.append( float(brine_out) - float(brine_in) )
         rpm_queue.append( float(rpm) )
+        brineDTOverRPM_queue.append( -MAXRPM * ( float(brine_out) - float(brine_in) ) / float(rpm) )
 
         # Delta brine relative fractional rpm
-        MAXRPM = 100;
         brineDTOverRPM = '0'
         if float(rpm) > 10:
             # Instantant value
@@ -111,7 +114,10 @@ while True:
             # Filtered values
             filtered_brineDt = statistics.median( brineDt_queue)
             filtered_rpm = statistics.median( rpm_queue)
-            brineDTOverRPMvalue = -MAXRPM * filtered_brineDt / filtered_rpm
+            brineDTOverRPM_OLD = "{:6.2f}".format( -MAXRPM * filtered_brineDt / filtered_rpm)
+
+            # Filtered simpler method
+            brineDTOverRPMvalue = statistics.median( brineDTOverRPM_queue)
 
             # String output
             brineDTOverRPM = "{:6.2f}".format(brineDTOverRPMvalue)
@@ -144,6 +150,7 @@ while True:
                brine_dT + TAB + \
                '|' + TAB + \
                brineDTOverRPMvalueInstant + TAB + \
+               brineDTOverRPM_OLD + TAB + \
                brineDTOverRPM + TAB + \
                wire_power + EOL
         f.write( data)
