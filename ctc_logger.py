@@ -14,11 +14,12 @@ import statistics
 #   Set Timer AUTOOFF to time to run heater after it has become lower than THRESHOLD level
 #   I have it set to 1800 seconds = 30 minutes.
 #
-# HEAT WIRE THRESHOLD
-THRESHOLD = 60                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
+# HEAT WIRE THRESHOLDs (BOTH NEEDS TO BE SURPASSED)
+THRESHOLD = 6                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
+BRINE_DT_THRESHOLD = -2             # Threshold on delta brine only.  Trigger if  deltaBrine < BRINE_DT_THRESHOLD (since both negative)
 #
 # LOG FREQUENCY
-DELAY = 20                          # Must be above approximately 20 seconds
+DELAY = 60                          # Must be above approximately 20 seconds
 #
 # LOG FILE
 LOGFILE = "/var/log/ctc_log.txt"    # Prepare : sudo touch, and, sudo chmod a+w
@@ -91,7 +92,8 @@ while True:
         warm_water = ctc.warm_water_percent()
         brine_in = ctc.brine_in()
         brine_out = ctc.brine_out()
-        brine_dT = "{:6.1f}".format(  float(brine_out) - float(brine_in) )
+        brine_dT_value = float(brine_out) - float(brine_in)
+        brine_dT = "{:6.1f}".format( brine_dT_value)
 
         wire_power = "{:6.0f}".format( plug.getpower())
 
@@ -109,7 +111,7 @@ while True:
             # Filtered values
             filtered_brineDt = statistics.median( brineDt_queue)
             filtered_rpm = statistics.median( rpm_queue)
-            brineDTOverRPMvalue =  -MAXRPM * ( filtered_brineDt ) / filtered_rpm
+            brineDTOverRPMvalue = -MAXRPM * filtered_brineDt / filtered_rpm
 
             # String output
             brineDTOverRPM = "{:6.2f}".format(brineDTOverRPMvalue)
@@ -117,7 +119,7 @@ while True:
         #
         # Heater
         #
-        if brineDTOverRPMvalue > THRESHOLD:
+        if (brineDTOverRPMvalue > THRESHOLD) & (brine_dT_value < BRINE_DT_THRESHOLD):
             plug.on()
 
         #if brineDTOverRPMvalue < THRESHOLD:
