@@ -3,6 +3,9 @@ import jan_shelly_module as plug
 import traceback
 import time
 import datetime
+from collections import deque
+import statistics
+
 #
 # NOTES:
 #
@@ -12,17 +15,23 @@ import datetime
 #   I have it set to 1800 seconds = 30 minutes.
 #
 # HEAT WIRE THRESHOLD
-THRESHOLD = 6                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
+THRESHOLD = 60                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
 #
 # LOG FREQUENCY
-DELAY = 60                          # Must be above approximately 20 seconds
+DELAY = 20                          # Must be above approximately 20 seconds
 #
 # LOG FILE
 LOGFILE = "/var/log/ctc_log.txt"    # Prepare : sudo touch, and, sudo chmod a+w
+#
+# LENGTH FOR STATISTICS
+HISTORYLENGTH = 7                   # Used for filtering out fluctuations in brine_dT and rpm
 
 #
 # CODE
 #
+
+brineDt_queue = deque([], maxlen = HISTORYLENGTH)
+rpm_queue = deque([], maxlen = HISTORYLENGTH)
 
 EOL = '\n'
 TAB = '\t'
@@ -41,6 +50,7 @@ header = 'time        ' + TAB + \
     'brineDt' + TAB + \
     '|' + TAB + \
     'bri/rpm' + TAB + \
+    'median' + TAB + \
     'P_wire'
 
 f = open( LOGFILE, "a", buffering=1)
@@ -85,11 +95,23 @@ while True:
 
         wire_power = "{:6.0f}".format( plug.getpower())
 
+        # Store some old values for filtering
+        brineDt_queue.append( float(brine_out) - float(brine_in) )
+        rpm_queue.append( float(rpm) )
+
         # Delta brine relative fractional rpm
         MAXRPM = 100;
         brineDTOverRPM = '0'
         if float(rpm) > 10:
-            brineDTOverRPMvalue =  -MAXRPM * ( float(brine_out) - float(brine_in) ) / float(rpm)
+            # Instantant value
+            brineDTOverRPMvalueInstant =  "{:6.2f}".format( -MAXRPM * ( float(brine_out) - float(brine_in) ) / float(rpm) )
+
+            # Filtered values
+            filtered_brineDt = statistics.median( brineDt_queue)
+            filtered_rpm = statistics.median( rpm_queue)
+            brineDTOverRPMvalue =  -MAXRPM * ( filtered_brineDt ) / filtered_rpm
+
+            # String output
             brineDTOverRPM = "{:6.2f}".format(brineDTOverRPMvalue)
 
         #
@@ -119,6 +141,7 @@ while True:
                brine_out + TAB + \
                brine_dT + TAB + \
                '|' + TAB + \
+               brineDTOverRPMvalueInstant + TAB + \
                brineDTOverRPM + TAB + \
                wire_power + EOL
         f.write( data)
