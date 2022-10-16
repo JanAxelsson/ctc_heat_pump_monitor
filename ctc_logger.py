@@ -19,7 +19,7 @@ THRESHOLD = 6                       # Threshold on delta brine relative fraction
 BRINE_DT_THRESHOLD = -2             # Threshold on delta brine only.  Trigger if  deltaBrine < BRINE_DT_THRESHOLD (since both negative)
 #
 # LOG FREQUENCY
-DELAY = 20                          # Must be above approximately 20 seconds
+DELAY = 60                          # Must be above approximately 20 seconds
 #
 # LOG FILE
 LOGFILE = "/var/log/ctc_log.txt"    # Prepare : sudo touch, and, sudo chmod a+w
