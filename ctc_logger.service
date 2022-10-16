@@ -1,0 +1,10 @@
+
+[Unit]
+Description=Jan Axelsson's CTC heat pump logger and thermal-wire runner.
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/jan/ctc_heat_pump_monitor/ctc_logger.py
+
+[Install]
+WantedBy=multi-user.target
