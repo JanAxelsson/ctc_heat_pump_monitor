@@ -12,11 +12,11 @@ import statistics
 # AUTO OFF
 #   Web browser to BASEURL (from jan_shelly_module.py).
 #   Set Timer AUTOOFF to time to run heater after it has become lower than THRESHOLD level
-#   I have it set to 1800 seconds = 30 minutes.
+#   I have it set to 900 seconds = 15 minutes.
 #
 # HEAT WIRE THRESHOLDs (BOTH NEEDS TO BE SURPASSED)
 THRESHOLD = 6                       # Threshold on delta brine relative fractional rpm;  deltaBrine / ( rpm / maxRpm)
-BRINE_DT_THRESHOLD = -2             # Threshold on delta brine only.  Trigger if  deltaBrine < BRINE_DT_THRESHOLD (since both negative)
+BRINE_DT_THRESHOLD = -3             # Threshold on delta brine only.  Trigger if  deltaBrine < BRINE_DT_THRESHOLD (since both negative)
 #
 # LOG FREQUENCY
 DELAY = 60                          # Must be above approximately 20 seconds
